@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Doctor Profile Settings</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafd;
+            line-height: 1.6;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="/" class="text-2xl font-bold text-blue-700">MedConnect</a>
+            <div class="flex items-center space-x-4">
+                <a href="/doctor_dashboard" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-200 font-medium">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12 max-w-2xl">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">Profile Settings</h1>
+
+        <div class="bg-white p-8 rounded-lg shadow-md space-y-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Doctor Information</h2>
+            
+            <form method="post" action="{{ url_for('update_doctor_profile') }}" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" value="{{ doctor_data.name }}" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" value="{{ doctor_data.email }}" disabled
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed sm:text-sm">
+                </div>
+                <div>
+                    <label for="specialization" class="block text-sm font-medium text-gray-700">Specialization</label>
+                    <input type="text" id="specialization" name="specialization" value="{{ doctor_data.specialization }}" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="licenseNumber" class="block text-sm font-medium text-gray-700">License Number</label>
+                    <input type="text" id="licenseNumber" name="licenseNumber" value="{{ doctor_data.licenseNumber }}" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                
+                <!-- New fields for experience and achievements -->
+                <div>
+                    <label for="experience" class="block text-sm font-medium text-gray-700">Experience (Years)</label>
+                    <input type="number" id="experience" name="experience" value="{{ doctor_data.get('experience', '') }}"
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="achievements" class="block text-sm font-medium text-gray-700">Achievements (comma-separated)</label>
+                    <textarea id="achievements" name="achievements" rows="3"
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ doctor_data.get('achievements', '') }}</textarea>
+                </div>
+
+                <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    Update Profile
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto text-center px-4">
+            <p>&copy; 2024 MedConnect. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="/aboutus" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>
+                <a href="/contactus" class="text-gray-400 hover:text-white transition-colors duration-200">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - My Appointments</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and overall background */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafd; /* Very light blue-gray background */
+            line-height: 1.6;
+            color: #374151; /* Default text color */
+        }
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin: 0 0.25rem;
+        }
+        .tab-button.active {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #1d4ed8; /* blue-700 */
+            border-bottom: 2px solid #3b82f6; /* blue-500 */
+        }
+        .tab-button:not(.active):hover {
+            background-color: #f0f9ff; /* blue-50 */
+            color: #2563eb; /* blue-600 */
+        }
+        .message-box {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: #10b981; /* bg-green-500 */
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+        }
+        .error-message-box {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: #ef4444; /* bg-red-500 */
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <!-- Logo/Brand Name -->
+            <a href="/" class="text-2xl font-bold text-blue-700">MedConnect</a>
+
+            <!-- User Info and Back to Dashboard -->
+            <div class="flex items-center space-x-4">
+                <a href="/patient_dashboard" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-200 font-medium">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">My Appointments</h1>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ 'message-box' if category == 'success' else 'error-message-box' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Tab Navigation -->
+        <div class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="pendingTab" class="tab-button">Pending Appointments</button>
+            <button id="upcomingTab" class="tab-button active">Upcoming Appointments</button>
+            <button id="prescriptionTab" class="tab-button">Prescription Ready</button> {# New Tab #}
+            <button id="pastTab" class="tab-button">Past Appointments</button>
+        </div>
+
+        <!-- Pending Appointments Content -->
+        <div id="pendingContent" class="tab-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            {% if pending_appointments %}
+                {% for appt in pending_appointments %}
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Appointment with {{ appt.doctorName }}</h3>
+                    <p class="text-gray-600 text-sm mb-1">Specialization: {{ appt.specialization }}</p>
+                    <p class="text-gray-600 mb-1">Date: <span class="font-medium text-yellow-700">{{ appt.date }}</span></p>
+                    <p class="text-gray-600 mb-1">Time: <span class="font-medium text-yellow-700">{{ appt.time }}</span></p>
+                    <p class="text-gray-600 font-bold text-red-600 mb-4">Issue: {{ appt.issueDescription }}</p>
+                    <p class="text-gray-600">Status: <span class="font-medium text-yellow-600">{{ appt.status }}</span></p>
+                    {# No action buttons here, patient waits for doctor's response #}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="md:col-span-3 bg-yellow-100 p-6 rounded-lg text-yellow-800 text-center">
+                    <p class="text-lg">You have no pending appointments.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Upcoming Appointments Content (Accepted and Future) -->
+        <div id="upcomingContent" class="tab-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% if upcoming_appointments %}
+                {% for appt in upcoming_appointments %}
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Consultation with {{ appt.doctorName }}</h3>
+                    <p class="text-gray-600 text-sm mb-1">Specialization: {{ appt.specialization }}</p>
+                    <p class="text-gray-600 mb-1">Date: <span class="font-medium text-blue-700">{{ appt.date }}</span></p>
+                    <p class="text-gray-600 mb-4">Time: <span class="font-medium text-blue-700">{{ appt.time }}</span></p>
+                    <p class="text-gray-600 font-bold text-red-600 mb-4">Issue: {{ appt.issueDescription }}</p>
+                    <p class="text-gray-600">Status: <span class="font-medium text-blue-600">{{ appt.status }}</span></p>
+                    <!-- "Mark as Completed" button remains for patient to manually confirm if needed, though auto-completion on time pass is there -->
+                    <form method="post" action="{{ url_for('complete_appointment', unique_appointment_id_param=appt.unique_appointment_id) }}" class="mt-4">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 w-full">
+                            Mark as Completed
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="md:col-span-3 bg-blue-100 p-6 rounded-lg text-blue-800 text-center">
+                    <p class="text-lg">You have no accepted upcoming appointments.</p>
+                    <a href="/doctor_list" class="text-blue-600 hover:underline font-medium mt-2 block">Book a new appointment!</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Prescription Ready Appointments Content (new section) -->
+        <div id="prescriptionContent" class="tab-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            {% if prescription_ready_appointments %}
+                {% for appt in prescription_ready_appointments %}
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Consultation with {{ appt.doctorName }}</h3>
+                    <p class="text-gray-600 text-sm mb-1">Specialization: {{ appt.specialization }}</p>
+                    <p class="text-gray-600 mb-1">Date: <span class="font-medium text-purple-700">{{ appt.date }}</span></p>
+                    <p class="text-gray-600 mb-4">Time: <span class="font-medium text-purple-700">{{ appt.time }}</span></p>
+                    <p class="text-gray-600 font-bold text-red-600 mb-4">Issue: {{ appt.issueDescription }}</p>
+                    <p class="text-gray-600">Status: <span class="font-medium text-purple-600">{{ appt.status }}</span></p>
+                    
+                    <div class="mt-4">
+                        <a href="{{ url_for('view_patient_prescription', unique_appointment_id_param=appt.unique_appointment_id) }}"
+                           class="w-full inline-block text-center bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors duration-200 font-medium">
+                            View Prescription
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="md:col-span-3 bg-purple-100 p-6 rounded-lg text-purple-800 text-center">
+                    <p class="text-lg">No prescriptions are ready for review.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Past Appointments Content (hidden by default) -->
+        <div id="pastContent" class="tab-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            {% if past_appointments %}
+                {% for appt in past_appointments %}
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 {% if appt.status == 'Completed' %}border-gray-400{% elif appt.status == 'Rejected' %}border-red-400{% else %}border-gray-400{% endif %}">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                            Consultation with {{ appt.doctorName }}
+                        </h3>
+                        <p class="text-gray-600 text-sm mb-1">Specialization: {{ appt.specialization }}</p>
+                        <p class="text-gray-600 mb-1">Date: <span class="font-medium text-gray-700">{{ appt.date }}</span></p>
+                        <p class="text-gray-600 mb-4">Time: <span class="font-medium text-gray-700">{{ appt.time }}</span></p>
+                        <p class="text-gray-600 font-bold text-red-600 mb-4">Issue: {{ appt.issueDescription }}</p>
+                        <p class="text-gray-600">Status: 
+                            <span class="font-medium {% if appt.status == 'Completed' %}text-gray-700{% elif appt.status == 'Rejected' %}text-red-700{% else %}text-gray-700{% endif %}">
+                                {{ appt.status }}
+                            </span>
+                        </p>
+                        {# No action buttons for past appointments #}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="md:col-span-3 bg-gray-100 p-6 rounded-lg text-gray-800 text-center">
+                    <p class="text-lg">You have no past appointments.</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto text-center px-4">
+            <p>&copy; 2024 MedConnect. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="/aboutus" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</a>
+                <a href="/contactus" class="text-gray-400 hover:text-white transition-colors duration-200">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const pendingTab = document.getElementById('pendingTab');
+        const upcomingTab = document.getElementById('upcomingTab');
+        const prescriptionTab = document.getElementById('prescriptionTab'); // New tab
+        const pastTab = document.getElementById('pastTab');
+
+        const pendingContent = document.getElementById('pendingContent');
+        const upcomingContent = document.getElementById('upcomingContent');
+        const prescriptionContent = document.getElementById('prescriptionContent'); // New content
+        const pastContent = document.getElementById('pastContent');
+
+        function showTab(tabToShow) {
+            // Hide all content sections
+            pendingContent.classList.add('hidden');
+            upcomingContent.classList.add('hidden');
+            prescriptionContent.classList.add('hidden'); // Hide new content
+            pastContent.classList.add('hidden');
+
+            // Deactivate all tab buttons
+            pendingTab.classList.remove('active');
+            upcomingTab.classList.remove('active');
+            prescriptionTab.classList.remove('active'); // Deactivate new tab
+            pastTab.classList.remove('active');
+
+            // Show the selected content and activate the corresponding tab
+            if (tabToShow === 'pending') {
+                pendingContent.classList.remove('hidden');
+                pendingTab.classList.add('active');
+            } else if (tabToShow === 'upcoming') {
+                upcomingContent.classList.remove('hidden');
+                upcomingTab.classList.add('active');
+            } else if (tabToShow === 'prescription') { // Handle new tab
+                prescriptionContent.classList.remove('hidden');
+                prescriptionTab.classList.add('active');
+            } else if (tabToShow === 'past') {
+                pastContent.classList.remove('hidden');
+                pastTab.classList.add('active');
+            }
+        }
+
+        // Add event listeners to tab buttons
+        pendingTab.addEventListener('click', () => showTab('pending'));
+        upcomingTab.addEventListener('click', () => showTab('upcoming'));
+        prescriptionTab.addEventListener('click', () => showTab('prescription')); // New listener
+        pastTab.addEventListener('click', () => showTab('past'));
+
+        // Initialize with the most relevant tab active
+        document.addEventListener('DOMContentLoaded', () => {
+            // Priority: Prescription Ready > Pending > Upcoming > Past
+            if ({{ (prescription_ready_appointments | length > 0) | tojson }}) {
+                showTab('prescription');
+            } else if ({{ (pending_appointments | length > 0) | tojson }}) {
+                showTab('pending');
+            } else if ({{ (upcoming_appointments | length > 0) | tojson }}) {
+                showTab('upcoming');
+            } else {
+                showTab('past');
+            }
+
+            // Auto-hide flash messages after 5 seconds
+            const messageBoxes = document.querySelectorAll('.message-box, .error-message-box');
+            messageBoxes.forEach(box => {
+                setTimeout(() => {
+                    box.style.display = 'none';
+                }, 5000); // 5000 milliseconds = 5 seconds
+            });
+        });
+    </script>
+</body>
+</html>

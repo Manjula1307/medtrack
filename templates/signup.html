@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Sign Up</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and overall background */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            margin: 0;
+        }
+        .error-message {
+            color: #dc2626; /* red-600 */
+            background-color: #fef2f2; /* red-50 */
+            border: 1px solid #ef4444; /* red-500 */
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .success-message {
+            color: #047857; /* green-700 */
+            background-color: #ecfdf5; /* green-50 */
+            border: 1px solid #10b981; /* green-500 */
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        /* Initially hide role-specific fields */
+        #patientSpecificFields, #doctorSpecificFields {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md mx-4 sm:mx-auto">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Sign Up for MedConnect</h2>
+
+        <!-- Display error/success messages from Flask -->
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+        {% if success_message %}
+            <div class="success-message">{{ success_message }}</div>
+        {% endif %}
+
+        <!-- Signup Form -->
+        <form id="signupForm" method="post" action="/signup" class="space-y-6">
+            <div>
+                <label for="signupName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input type="text" id="signupName" name="signupName" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="signupEmail" class="block text-sm font-medium text-gray-700">Email Address</label>
+                <input type="email" id="signupEmail" name="signupEmail" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="signupPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="signupPassword" name="signupPassword" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <!-- Role Selection Field -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">I am a:</label>
+                <div class="mt-1 flex items-center space-x-4">
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="user_type" value="patient" id="radioPatient" class="form-radio h-4 w-4 text-blue-600" checked>
+                        <span class="ml-2 text-gray-700">Patient</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="user_type" value="doctor" id="radioDoctor" class="form-radio h-4 w-4 text-green-600">
+                        <span class="ml-2 text-gray-700">Doctor</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Patient Specific Fields (Hidden by default) -->
+            <div id="patientSpecificFields" class="space-y-6">
+                <hr class="border-gray-200">
+                <p class="text-lg font-semibold text-gray-800">Patient Details</p>
+                <div>
+                    <label for="dateOfBirth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth"
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                    <select id="gender" name="gender"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Doctor Specific Fields (Hidden by default) -->
+            <div id="doctorSpecificFields" class="space-y-6">
+                <hr class="border-gray-200">
+                <p class="text-lg font-semibold text-gray-800">Doctor Details</p>
+                <div>
+                    <label for="specialization" class="block text-sm font-medium text-gray-700">Specialization</label>
+                    <input type="text" id="specialization" name="specialization"
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           placeholder="e.g., Cardiology, Pediatrics">
+                </div>
+                <div>
+                    <label for="licenseNumber" class="block text-sm font-medium text-gray-700">Medical License Number</label>
+                    <input type="text" id="licenseNumber" name="licenseNumber"
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                Sign Up
+            </button>
+            <p class="mt-4 text-center text-sm text-gray-600">
+                Already have an account?
+                <a href="/login" class="font-medium text-blue-600 hover:text-blue-500">Login here</a>
+            </p>
+        </form>
+    </div>
+
+    <script>
+        const radioPatient = document.getElementById('radioPatient');
+        const radioDoctor = document.getElementById('radioDoctor');
+        const patientSpecificFields = document.getElementById('patientSpecificFields');
+        const doctorSpecificFields = document.getElementById('doctorSpecificFields');
+
+        function toggleRoleSpecificFields() {
+            if (radioPatient.checked) {
+                patientSpecificFields.style.display = 'block';
+                doctorSpecificFields.style.display = 'none';
+                // Add 'required' attribute to patient fields when patient is selected
+                document.getElementById('dateOfBirth').required = true;
+                document.getElementById('gender').required = true;
+                // Remove 'required' from doctor fields
+                document.getElementById('specialization').required = false;
+                document.getElementById('licenseNumber').required = false;
+            } else if (radioDoctor.checked) {
+                patientSpecificFields.style.display = 'none';
+                doctorSpecificFields.style.display = 'block';
+                // Add 'required' attribute to doctor fields when doctor is selected
+                document.getElementById('specialization').required = true;
+                document.getElementById('licenseNumber').required = true;
+                // Remove 'required' from patient fields
+                document.getElementById('dateOfBirth').required = false;
+                document.getElementById('gender').required = false;
+            }
+        }
+
+        // Add event listeners for radio button changes
+        radioPatient.addEventListener('change', toggleRoleSpecificFields);
+        radioDoctor.addEventListener('change', toggleRoleSpecificFields);
+
+        // Initial call to set visibility based on default checked radio button
+        document.addEventListener('DOMContentLoaded', toggleRoleSpecificFields);
+    </script>
+    <!-- Verification Comment: This signup.html includes role-specific fields and was last updated 2024-06-22 20:00 IST -->
+</body>
+</html>

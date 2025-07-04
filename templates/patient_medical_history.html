@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - My Medical Records</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and overall background */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafd; /* Very light blue-gray background */
+            line-height: 1.6;
+            color: #374151; /* Default text color */
+        }
+        .record-card {
+            border-left: 4px solid #3b82f6; /* Blue accent */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <!-- Logo/Brand Name -->
+            <a href="/" class="text-2xl font-bold text-blue-700">MedConnect</a>
+
+            <!-- User Info and Back to Dashboard -->
+            <div class="flex items-center space-x-4">
+                <a href="/patient_dashboard" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-200 font-medium">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12 max-w-3xl">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">My Medical Records</h1>
+
+        <div class="bg-white p-8 rounded-lg shadow-md space-y-6">
+            {% if medical_records %}
+                {% for record in medical_records %}
+                <div class="record-card p-4 rounded-lg bg-gray-50">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xl font-semibold text-gray-800">{{ record.recordType }} ({{ record.date }})</h3>
+                        <span class="text-sm font-medium text-gray-500">{{ record.date }}</span>
+                    </div>
+                    <p class="text-gray-600 mb-2"><strong>Doctor:</strong> {{ record.doctorName }}</p>
+                    <p class="text-gray-600 mb-2"><strong>Diagnosis:</strong> {{ record.diagnosis }}</p>
+                    <p class="text-gray-600 mb-2"><strong>Prescription:</strong> {{ record.prescription }}</p>
+                    <p class="text-gray-700 text-sm mt-3">
+                        <span class="font-semibold">Notes:</span> {{ record.notes }}
+                    </p>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="bg-blue-100 p-6 rounded-lg text-blue-800 text-center">
+                <p class="text-lg">No medical records found. Consult a doctor to start your history!</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto text-center px-4">
+            <p>&copy; 2024 MedConnect. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="/aboutus" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</a>
+                <a href="/contactus" class="text-gray-400 hover:text-white transition-colors duration-200">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

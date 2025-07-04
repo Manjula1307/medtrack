@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Contact Us</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and overall background */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafd; /* Very light blue-gray background */
+            line-height: 1.6;
+            color: #374151; /* Default text color */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <!-- Logo/Brand Name -->
+            <a href="index.html" class="text-2xl font-bold text-blue-700">MedConnect</a>
+
+            <!-- Navigation Link -->
+            <nav>
+                <a href="index.html" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-200 font-medium">
+                    Back to Home
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area - Contact Us -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12 max-w-2xl">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">Contact MedConnect Support</h1>
+
+        <div class="bg-white p-8 rounded-lg shadow-md space-y-6">
+            <p class="text-lg text-gray-700 text-center">
+                We're here to help! Please reach out to us with any questions, feedback, or support requests.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Email Support</h2>
+                    <p class="text-gray-600">For general inquiries and support:</p>
+                    <a href="mailto:support@medconnect.com" class="text-blue-600 hover:underline font-medium">support@medconnect.com</a>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Technical Issues</h2>
+                    <p class="text-gray-600">For technical assistance or bug reports:</p>
+                    <a href="mailto:techsupport@medconnect.com" class="text-blue-600 hover:underline font-medium">techsupport@medconnect.com</a>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Phone Support</h2>
+                <p class="text-gray-600">Available Monday - Friday, 9 AM - 5 PM IST</p>
+                <p class="text-lg font-bold text-blue-600">+91 98765 43210</p>
+            </div>
+
+            <div class="pt-4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Send Us a Message</h2>
+                <form class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Your Name</label>
+                        <input type="text" id="name" name="name" required
+                               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Your Email</label>
+                        <input type="email" id="email" name="email" required
+                               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700">Your Message</label>
+                        <textarea id="message" name="message" rows="5" required
+                                  class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                    </div>
+                    <button type="submit"
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto text-center px-4">
+            <p>&copy; 2024 MedConnect. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="aboutus.html" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

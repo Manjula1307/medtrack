@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Book Appointment</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafd;
+            line-height: 1.6;
+            color: #374151;
+        }
+        .message-box {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: #10b981; /* bg-green-500 */
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+        }
+        .error-message-box {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: #ef4444; /* bg-red-500 */
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="/" class="text-2xl font-bold text-blue-700">MedConnect</a>
+            <div class="flex items-center space-x-4">
+                <a href="/patient_dashboard" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-200 font-medium">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12 max-w-2xl">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">Book Appointment</h1>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ 'message-box' if category == 'success' else 'error-message-box' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="bg-white p-8 rounded-lg shadow-md space-y-6">
+            <div class="text-center mb-6">
+                <p class="text-xl font-semibold text-gray-800">Booking with:</p>
+                <p class="text-2xl font-bold text-blue-600">{{ doctor_name }}</p>
+                <p class="text-gray-600 text-lg">{{ doctor_specialization }}</p>
+                <p class="text-gray-500 text-sm">({{ doctor_email }})</p>
+            </div>
+
+            <form action="{{ url_for('book_appointment_submit') }}" method="POST" class="space-y-6">
+                <input type="hidden" name="doctorEmail" value="{{ doctor_email }}">
+
+                <div>
+                    <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Appointment Date</label>
+                    <input type="date" id="appointmentDate" name="appointmentDate" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="{{ default_date }}" value="{{ default_date }}">
+                </div>
+
+                <div>
+                    <label for="appointmentTime" class="block text-sm font-medium text-gray-700">Appointment Time</label>
+                    <input type="time" id="appointmentTime" name="appointmentTime" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           value="{{ default_time }}">
+                </div>
+
+                <div>
+                    <label for="issueDescription" class="block text-sm font-medium text-gray-700">Describe Your Issue</label>
+                    <textarea id="issueDescription" name="issueDescription" rows="4" required
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                              placeholder="e.g., Recurring headaches, persistent cough, needing a prescription refill, general check-up..."></textarea>
+                </div>
+
+                <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    Confirm Booking
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto text-center px-4">
+            <p>&copy; 2024 MedConnect. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="/aboutus" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</a>
+                <a href="/contactus" class="text-gray-400 hover:text-white transition-colors duration-200">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

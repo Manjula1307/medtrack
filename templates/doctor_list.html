@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Consult a Doctor</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and overall background */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafd; /* Very light blue-gray background */
+            line-height: 1.6;
+            color: #374151; /* Default text color */
+        }
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #a78bfa; /* Border matching purple theme */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <!-- Logo/Brand Name -->
+            <a href="/" class="text-2xl font-bold text-blue-700">MedConnect</a> <!-- Link to root Flask route -->
+
+            <!-- User Info and Back to Dashboard -->
+            <div class="flex items-center space-x-4">
+                <a href="/patient_dashboard" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-200 font-medium">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">Available Doctors for Consultation</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for doctor in doctors %}
+            <div class="bg-white p-6 rounded-lg shadow-md text-center flex flex-col items-center">
+                <img src="https://placehold.co/80x80/E0E7FF/4338CA?text=Dr" alt="Dr. {{ doctor.name }}" class="profile-picture mb-4">
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Dr. {{ doctor.name }}</h3>
+                <p class="text-blue-600 font-medium mb-2">{{ doctor.specialization }}</p>
+                <p class="text-gray-600 text-sm mb-4">License: {{ doctor.licenseNumber }}</p>
+                <a href="{{ url_for('book_appointment_page', doctor_email=doctor.email) }}" 
+                   class="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors duration-200 font-medium text-lg w-full">
+                    Consult Now
+                </a>
+            </div>
+            {% else %}
+            <div class="md:col-span-2 lg:col-span-3 bg-gray-100 p-6 rounded-lg text-gray-800 text-center">
+                <p class="text-lg">No doctors available for consultation at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto text-center px-4">
+            <p>&copy; 2024 MedConnect. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="/aboutus" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</a>
+                <a href="/contactus" class="text-gray-400 hover:text-white transition-colors duration-200">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
