@@ -6,9 +6,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 app = Flask(__name__)
-# Flask's SECRET_KEY is for session management, not AWS authentication.
-# It's crucial for security and should be set via an environment variable in production.
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_strong_and_unique_flask_flask_secret_key_here') 
+
 
 # --- AWS Configuration ---
 # These variables should be set in your EC2 instance's environment or via a deployment script.
